@@ -31,9 +31,9 @@ int main()
 	cout << "The following is a list of the items in set A: " << endl;
 	cout << "A = { " << flush;
 	int a = vectorA.size();	
-	for(int i = 0; i < a; i++)
+	for(auto & it : vectorA)
 	{
-		cout << vectorA[i] << " ";
+		cout << it << " ";
 	}
 	cout << "} \nSet A contains " << a << " items." << endl;
 
@@ -51,9 +51,9 @@ int main()
 	cout << "The following is a list of the items in set B: " << endl;
 	cout << "B = { " << flush;
 	int b = vectorB.size();
-	for(int i = 0; i < b; i++)
+	for(auto & it : vectorB)
 	{
-		cout << vectorB[i] << " ";
+		cout << it << " ";
 	}
 	cout << "} \nSet B contains " << b << " items." << endl;
 
@@ -61,7 +61,7 @@ int main()
 	int interCard = 0;	
 	cout << "\nA intersect B contains the following:\n{ ";
 	//intersect function
-	for(int i = 0; i < a; ++i)
+	for(int i = 0; i < a; i++)
 	{
 		for(int j = 0; j < b; ++j)
 		{
@@ -73,7 +73,20 @@ int main()
 			}
 		}
 	}
+/*
+	vector<string> v(10);
+	vector<string>:: iterator it, st;
+	int sizeN = sizeof(vectorA) / sizeof(vectorA[0]);
+	sort(vectorA, vectorA + sizeN);
+	sort(vectorB, vectorB + sizeN);
+
+	it = set_intersection(vectorA, vectorA + sizeN, vectorB, vectorB + sizeN, v.begin());
+	for (st = v.begin(); st != it; ++st)
+	{
+		cout << " " << *st;
+	}
 	cout << "} \nThe cardinality of the intersection is " << interCard << endl;
+*/
 
 //A U B
 	int unionCard = a;
