@@ -9,8 +9,10 @@ SOURCES:http://www.cplusplus.com/reference/sstream/istringstream/istringstream/
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
+
 
 int main()
 {
@@ -61,98 +63,59 @@ int main()
 	int interCard = 0;	
 	cout << "\nA intersect B contains the following:\n{ ";
 	//intersect function
-	for(int i = 0; i < a; i++)
+	for(size_t i = 0; i < a; ++i)
 	{
-		for(int j = 0; j < b; ++j)
+		vector<string>::iterator it = find(vectorB.begin(), vectorB.end(), vectorA[i]);
+		if(it != vectorB.end())
 		{
-			if(vectorA[i] == vectorB[j])
-			{
-				cout << vectorA[i] << " ";
-				++interCard;
-				break;
-			}
+			cout << vectorA[i] << " ";
+			interCard++;
 		}
-	}
-/*
-	vector<string> v(10);
-	vector<string>:: iterator it, st;
-	int sizeN = sizeof(vectorA) / sizeof(vectorA[0]);
-	sort(vectorA, vectorA + sizeN);
-	sort(vectorB, vectorB + sizeN);
-
-	it = set_intersection(vectorA, vectorA + sizeN, vectorB, vectorB + sizeN, v.begin());
-	for (st = v.begin(); st != it; ++st)
-	{
-		cout << " " << *st;
 	}
 	cout << "} \nThe cardinality of the intersection is " << interCard << endl;
-*/
 
 //A U B
-	int unionCard = a;
+	
 	cout << "\nA U B contains the following: \n{ ";
 
-	int fin[25] = {0};
-	for(int i = 0; i < a; ++i)
+	vector<string> unionA = vectorA;
+	vector<string> unionB = vectorB;
+	vector<string> unionC;
+	sort(unionA.begin(), unionA.end());
+	sort(unionB.begin(), unionB.end());
+	
+	merge(unionA.begin(), unionA.end(), unionB.begin(), unionB.end(), std::back_inserter(unionC));	
+
+	vector<string>::iterator pte = unique(unionC.begin(), unionC.end());
+	unionC.erase(pte, unionC.end());	
+	
+	for(auto & it : unionC)
 	{
-		cout << vectorA[i] << " ";
-		for(int j = 0; j < b; ++j)
-		{
-			if(vectorA[i] == vectorB[j])
-			{
-				fin[j] = i;
-			}
-		}
-		for(int i = 0; i < b; ++i)
-		{
-			if(!fin[i])
-			{
-				cout << vectorB[i] << " ";
-				++unionCard;
-			}
-		}
+		cout << it << " ";
 	}
-	cout << "} \nThe cardinality of the union is " << unionCard << endl;	
+
+	cout << "} \nThe cardinality of the union is " << unionC.size() << endl;	
 
 //A - B
-	int abCard = 0;
 	cout << "\nA - B = { " << flush;
-	for(int i = 0; i < a; ++i)
+	vector<string> difference; 
+	std::set_difference(unionA.begin(), unionA.end(), unionB.begin(), unionB.end(), std::inserter(difference, difference.begin()));
+	for(auto i : difference)
 	{
-		for(int j = 0; j < b; ++j)
-		{
-			if(vectorA[i] == vectorB[j])
-			{
-				break;
-			}
-			if(j == b)
-			{
-				cout << vectorA[i] << " ";
-				++abCard;
-			}
-		}
+		cout << i << " ";
 	}
-	cout << " }\nThe cardinality is " << abCard << endl;
+	cout << " }\nThe cardinality is " << difference.size() << endl;
 
 //B - A
-	int baCard = 0;
 	cout << "\nB - A = { " << flush;
-	for(int i = 0; i < b; ++i)
+	vector<string> differenceB; 
+	std::set_difference(unionB.begin(), unionB.end(), unionA.begin(), unionA.end(), std::inserter(differenceB, differenceB.begin()));
+	for(auto i : differenceB)
 	{
-		for(int j = 0; j < a; ++j)
-		{
-			if(vectorB[i] == vectorA[j])
-			{
-				break;
-			}
-			if(j == a)
-			{
-				cout << vectorB[i] << " ";
-				++baCard;
-			}
-		}
+		cout << i << " ";
 	}
-	cout << "}\nThe cardinality is " << baCard << endl;
+	
+	cout << "}\nThe cardinality is " << differenceB.size() << endl;
 
 //A X B
 	int axbCard = a * b;
